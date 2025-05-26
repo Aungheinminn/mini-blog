@@ -1,0 +1,59 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export const prerender = false;
+// Sample posts data using Array.from
+const posts = Array.from({ length: 6 }, (_, i) => ({
+  title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  photo: `https://picsum.photos/seed/${i}/400/200`,
+  author: `Author ${i + 1}`
+}));
+
+const { id } = Astro.params;
+const index = Number(id);
+const post = posts[index];
+---
+
+<BaseLayout title={post ? post.title : 'Post Not Found'}>
+  <style>
+    .blog-post {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+    .blog-post__image {
+      width: 100%;
+      height: auto;
+      margin-bottom: 1rem;
+    }
+    .blog-post__title {
+      margin: 0 0 1rem;
+      font-size: 2rem;
+      line-height: 1.2;
+    }
+    .blog-post__author {
+      margin: 0 0 2rem;
+      font-size: 0.875rem;
+      color: #888;
+    }
+    .blog-post__content {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #555;
+    }
+  </style>
+
+  <main class="blog-post">
+    {post ? (
+      <article>
+        <h1 class="blog-post__title">{post.title}</h1>
+        <img src={post.photo} alt={post.title} class="blog-post__image" />
+        <p class="blog-post__author">By {post.author}</p>
+        <div class="blog-post__content">{post.content}</div>
+      </article>
+    ) : (
+      <p>Post not found.</p>
+    )}
+  </main>
+</BaseLayout>

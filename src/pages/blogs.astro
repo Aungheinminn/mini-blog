@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BlogCard from '../components/BlogCard.astro';
+
+// Sample posts data using Array.from
+const posts = Array.from({ length: 6 }, (_, i) => ({
+  id: i.toString(),
+  title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+  content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+  photo: `https://picsum.photos/seed/${i}/400/200`,
+  author: `Author ${i + 1}`
+}));
+
+export const prerender = false;
+---
+<BaseLayout title="Blogs">
+  <style>
+    .blogs-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .blogs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 2rem;
+    }
+    .blogs-page h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+  </style>
+
+  <main class="blogs-page">
+    <h1>Blogs</h1>
+    <div class="blogs-grid">
+      {posts.map((post, index) => (
+        <a href={`/blog/${post.id}`}> 
+          <BlogCard {...post} />
+        </a>
+      ))}
+    </div>
+  </main>
+</BaseLayout>

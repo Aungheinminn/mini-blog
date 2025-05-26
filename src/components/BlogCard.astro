@@ -1,0 +1,59 @@
+---
+export interface Props {
+  /** Title of the blog post */
+  title: string;
+  /** URL or path to the photo image */
+  photo: string;
+  /** Excerpt or content of the blog post */
+  content: string;
+  /** Name of the author */
+  author: string;
+}
+
+const { title, photo, content, author } = Astro.props as Props;
+---
+<article class="blog-card">
+  {photo && (
+    <img src={photo} alt={title} class="blog-card__image" />
+  )}
+  <div class="blog-card__body">
+    <h2 class="blog-card__title">{title}</h2>
+    <p class="blog-card__content">{content}</p>
+    <p class="blog-card__author">By {author}</p>
+  </div>
+</article>
+
+<style>
+  .blog-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    overflow: hidden;
+    max-width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: #fff;
+  }
+  .blog-card__image {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  .blog-card__body {
+    padding: 1rem;
+  }
+  .blog-card__title {
+    margin: 0 0 0.5rem;
+    font-size: 1.25rem;
+    line-height: 1.2;
+  }
+  .blog-card__content {
+    margin: 0 0 1rem;
+    color: #555;
+    font-size: 1rem;
+  }
+  .blog-card__author {
+    margin: 0;
+    font-size: 0.875rem;
+    color: #888;
+    text-align: right;
+  }
+</style>
