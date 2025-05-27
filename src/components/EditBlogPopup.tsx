@@ -1,8 +1,9 @@
 import "../styles/global.css";
 
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { auth } from "../firebase/client";
-import { createPost } from "../lib/posts";
+import { onAuthStateChanged, User } from "firebase/auth";
+import { updatePost } from "../lib/posts";
 import {
   Dialog,
   DialogTrigger,
@@ -12,54 +13,60 @@ import {
   DialogFooter,
   DialogClose,
 } from "./ui/dialog";
-import { onAuthStateChanged, User } from "firebase/auth";
 
-export default function CreateBlogPopup() {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [photo, setPhoto] = useState("");
-  const [author, setAuthor] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+interface EditBlogPopupProps {
+  id: string;
+  initialTitle: string;
+  initialContent: string;
+  initialPhoto?: string;
+  initialAuthor?: string;
+  userId: string;
+}
+
+export default function EditBlogPopup({
+  id,
+  initialTitle,
+  initialContent,
+  initialPhoto = "",
+  initialAuthor = "",
+  userId,
+}: EditBlogPopupProps) {
   const [user, setUser] = useState<User | null>(null);
-
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (u) => {
-      setUser(u);
-    });
+    const unsubscribe = onAuthStateChanged(auth, (u) => setUser(u));
     return () => unsubscribe();
   }, []);
+  const isAuthorized = user?.uid === userId;
+  // Only render edit popup if the current user is authorized
+  if (!isAuthorized) {
+    return null;
+  }
+  const [title, setTitle] = useState(initialTitle);
+  const [content, setContent] = useState(initialContent);
+  const [photo, setPhoto] = useState(initialPhoto);
+  const [author, setAuthor] = useState(initialAuthor);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!user) {
-      window.location.href = "/signin";
-      return;
-    }
-    setError("");
-    setLoading(true);
+    const updatedPost = { title, content, photo, author, userId };
     try {
-      await createPost({ title, content, photo, author, userId: user.uid });
+      await updatePost(id, updatedPost);
       window.location.reload();
-    } catch (err: any) {
-      console.error("Error creating blog:", err);
-      setError(err.message || "Failed to create blog");
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error("Error updating post:", error);
     }
   };
 
   return (
     <Dialog>
-      <DialogTrigger className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-        Create Blog
+      <DialogTrigger disabled={!isAuthorized} className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed">
+        Edit
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create New Blog</DialogTitle>
+          <DialogTitle>Edit Blog</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="grid gap-4 py-4">
-          {error && <p className="text-red-600">{error}</p>}
           <div className="grid gap-1">
             <label htmlFor="blog-title" className="font-medium">
               Title
@@ -118,13 +125,14 @@ export default function CreateBlogPopup() {
                 Cancel
               </button>
             </DialogClose>
-            <button
-              type="submit"
-              disabled={loading}
-              className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
-            >
-              {loading ? "Creating..." : "Create"}
-            </button>
+            <DialogClose asChild>
+              <button
+                type="submit"
+                className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+              >
+                Save
+              </button>
+            </DialogClose>
           </DialogFooter>
         </form>
       </DialogContent>

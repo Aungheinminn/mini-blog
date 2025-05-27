@@ -1,6 +1,7 @@
 ---
 import CreateBlogPopup from './CreateBlogPopup';
 import BurgerMenu from './BurgerMenu';
+import UserPopover from './UserPopover';
 ---
 <nav aria-label="Main navigation" id="main-nav">
   <h1>Blogs</h1>
@@ -10,10 +11,12 @@ import BurgerMenu from './BurgerMenu';
     <li><a href="/my-blogs">My Blogs</a></li>
   </ul>
   <div class="burger">
+    <UserPopover client:load />
     <BurgerMenu client:load />
   </div>
 
   <div class="create">
+    <UserPopover client:load />
     <CreateBlogPopup client:load />
   </div>
 </nav>
@@ -28,7 +31,7 @@ import BurgerMenu from './BurgerMenu';
     display: flex;
     justify-content: space-between;
     align-items: center;
-    z-index: 100;
+    z-index: 40;
   }
   nav a {
     text-decoration: none;
@@ -61,13 +64,20 @@ import BurgerMenu from './BurgerMenu';
     gap: 1rem;
     padding: 1rem;
   }
+  .create {
+    display: flex;
+    gap: 10px;
+  }
   /* Mobile navigation: hide desktop links and show burger */
   @media (max-width: 768px) {
     nav ul {
       display: none;
     }
     .burger {
-      display: block;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
     }
     .create {
       display: none;

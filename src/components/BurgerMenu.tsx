@@ -13,7 +13,7 @@ export default function BurgerMenu() {
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <button className="burger" type="button">
+        <button className="burger cursor-pointer" type="button">
           <MenuIcon className="size-4" />
           <span className="sr-only">Open menu</span>
         </button>
@@ -32,4 +32,3 @@ export default function BurgerMenu() {
     </Sheet>
   );
 }
-

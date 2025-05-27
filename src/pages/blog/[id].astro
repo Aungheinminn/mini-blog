@@ -1,18 +1,12 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getPost } from '../../lib/posts';
+import EditBlogPopup from '../../components/EditBlogPopup.tsx';
+import DeleteBlogPopup from '../../components/DeleteBlogPopup.tsx';
 
 export const prerender = false;
-// Sample posts data using Array.from
-const posts = Array.from({ length: 6 }, (_, i) => ({
-  title: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-  content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
-  photo: `https://picsum.photos/seed/${i}/400/200`,
-  author: `Author ${i + 1}`
-}));
-
 const { id } = Astro.params;
-const index = Number(id);
-const post = posts[index];
+const post = await getPost(id);
 ---
 
 <BaseLayout title={post ? post.title : 'Post Not Found'}>
@@ -51,6 +45,10 @@ const post = posts[index];
         <img src={post.photo} alt={post.title} class="blog-post__image" />
         <p class="blog-post__author">By {post.author}</p>
         <div class="blog-post__content">{post.content}</div>
+        <div class="mt-4 flex gap-2">
+          <EditBlogPopup id={post.id} initialTitle={post.title} initialContent={post.content} initialPhoto={post.photo} initialAuthor={post.author} userId={post.userId} client:load />
+          <DeleteBlogPopup id={post.id} userId={post.userId} client:load />
+        </div>
       </article>
     ) : (
       <p>Post not found.</p>

@@ -1,6 +1,25 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import PostsList from '../components/PostsList.tsx';
+export const prerender = false;
 ---
 <BaseLayout title="My Blogs">
-  <h1>My Blogs</h1>
+  <style>
+    .blogs-page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem;
+    }
+    .blogs-page h1 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    </style>
+
+  <main class="blogs-page">
+    <h1>My Blogs</h1>
+    <div>
+      <PostsList filterByUser={true} client:load />
+    </div>
+  </main>
 </BaseLayout>

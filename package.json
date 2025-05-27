@@ -10,7 +10,9 @@
   },
   "dependencies": {
     "@astrojs/react": "^4.3.0",
+    "@radix-ui/react-avatar": "^1.1.10",
     "@radix-ui/react-dialog": "^1.1.14",
+    "@radix-ui/react-popover": "^1.1.14",
     "@tailwindcss/vite": "^4.1.7",
     "astro": "^5.8.0",
     "class-variance-authority": "^0.7.1",

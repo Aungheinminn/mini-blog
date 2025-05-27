@@ -1,7 +1,8 @@
 ---
 // BaseLayout wraps pages with HTML structure and Navbar
-const { title = '' } = Astro.props;
+const { title = '', hideNav = false } = Astro.props;
 import Navbar from '../components/Navbar.astro';
+import AuthGuard from '../components/AuthGuard';
 ---
 
 
@@ -15,7 +16,9 @@ import Navbar from '../components/Navbar.astro';
     <title>{title}</title>
   </head>
   <body>
-    <Navbar />
+    <!-- Global auth guard: redirect to sign-in if not authenticated -->
+    <AuthGuard client:load />
+    { !hideNav && <Navbar /> }
     <slot />
   </body>
 </html>

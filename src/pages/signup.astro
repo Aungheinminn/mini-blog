@@ -1,0 +1,16 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SignUpForm from '../components/SignUpForm';
+---
+
+<BaseLayout title="Sign Up" hideNav>
+  <div class="min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-md p-6 bg-white rounded shadow">
+      <h1 class="text-3xl font-bold mb-6">Sign Up</h1>
+      <SignUpForm client:load />
+      <p class="mt-4 text-center">
+        Already have an account? <a href="/signin" class="text-blue-600 hover:underline">Sign In</a>
+      </p>
+    </div>
+  </div>
+</BaseLayout>
